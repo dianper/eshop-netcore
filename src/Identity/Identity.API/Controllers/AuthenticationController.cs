@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Identity.API.Models;
+    using Identity.Application.Models;
     using Identity.Application.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
@@ -23,24 +23,24 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Authenticate([FromBody] AuthRequest request)
+        public async Task<IActionResult> AuthenticateAsync([FromBody] AuthRequest request)
         {
             try
             {
-                var response = await this.authService.AuthenticateUser(request.Email, request.Password);
-                if (response == null)
+                var response = await this.authService.AuthenticateAsync(request.Email, request.Password);
+                if (!response.Success)
                 {
-                    return Unauthorized(new { status = "error", message = "user unauthorized." });
+                    return Unauthorized(response);
                 }
 
-                return Ok(new { status = "ok", response });
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 this.logger.LogError("Error trying to authenticate the user.", new
                 {
                     Class = nameof(AuthenticationController),
-                    Method = nameof(Authenticate),
+                    Method = nameof(AuthenticateAsync),
                     Err = ex.Message
                 });
 

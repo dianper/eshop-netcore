@@ -1,8 +1,13 @@
 version: '3.4'
 
 services:
+    authdb:
+        image: mcr.microsoft.com/mssql/server
+
     identity.api:
         image: ${DOCKER_REGISTRY-}identityapi
         build:
             context: .
             dockerfile: src/Identity/Identity.API/Dockerfile
+        depends_on:
+            - authdb

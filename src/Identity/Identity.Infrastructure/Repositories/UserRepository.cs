@@ -12,9 +12,9 @@
         {
         }
 
-        public async Task<bool> IsValid(string email, string password)
+        public async Task<User> AuthenticateAsync(string email, string password)
         {
-            return await this.authContext.Users.AnyAsync(_ => _.Email.Equals(email) && _.Password.Equals(password));
+            return await this.authContext.Users.FirstOrDefaultAsync(_ => _.Email.Equals(email) && _.Password.Equals(password));
         }
     }
 }

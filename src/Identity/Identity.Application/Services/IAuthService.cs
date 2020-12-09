@@ -5,6 +5,6 @@
 
     public interface IAuthService
     {
-        Task<AuthResponse> AuthenticateUser(string email, string password);
+        Task<AuthResponse> AuthenticateAsync(string email, string password);
     }
 }

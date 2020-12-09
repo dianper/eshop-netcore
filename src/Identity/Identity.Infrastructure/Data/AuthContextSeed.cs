@@ -5,15 +5,19 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Identity.Core.Entities;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
     public class AuthContextSeed
     {
-        public static async Task SeedAsync(AuthContext authContext, ILoggerFactory loggerFactory)
+        public static async Task SeedAsync(AuthContext authContext, ILoggerFactory loggerFactory, int? retry = 0)
         {
+            int retryForAvailability = retry.Value;
+
             try
             {
-                authContext.Database.EnsureCreated();
+                authContext.Database.Migrate();
+                //authContext.Database.EnsureCreated();
 
                 if (!authContext.Users.Any())
                 {
@@ -23,8 +27,17 @@
             }
             catch (Exception ex)
             {
-                var log = loggerFactory.CreateLogger<AuthContextSeed>();
-                log.LogError(ex.Message);
+                if(retryForAvailability < 3)
+                {
+                    retryForAvailability++;
+                    
+                    var log = loggerFactory.CreateLogger<AuthContextSeed>();
+                    log.LogError(ex.Message);
+
+                    await SeedAsync(authContext, loggerFactory, retryForAvailability);
+                }
+
+                throw;
             }
         }
 

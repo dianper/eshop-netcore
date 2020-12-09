@@ -5,6 +5,6 @@
 
     public interface IUserRepository : IRepository<User>
     {
-        Task<bool> IsValid(string email, string password);
+        Task<User> AuthenticateAsync(string email, string password);
     }
 }
