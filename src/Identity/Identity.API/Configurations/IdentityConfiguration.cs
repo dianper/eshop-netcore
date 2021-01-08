@@ -2,7 +2,7 @@
 {
     using Identity.Application.Models;
 
-    public class AppConfiguration
+    public class IdentityConfiguration
     {
         public AuthConfiguration Authentication { get; set; }
         public SqlServerConfiguration SqlServer { get; set; }

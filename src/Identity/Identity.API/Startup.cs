@@ -17,20 +17,21 @@ namespace Identity.API
 
     public class Startup
     {
-        private readonly AppConfiguration appConfiguration;
+        private readonly IdentityConfiguration identityConfiguration;
 
         public Startup(IConfiguration configuration)
         {
-            this.appConfiguration = configuration.Get<AppConfiguration>();
+            this.identityConfiguration = configuration.Get<IdentityConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(this.appConfiguration.Authentication);
+            services.AddSingleton(this.identityConfiguration.Authentication);
 
-            //services.AddDbContext<AuthContext>(options => options.UseInMemoryDatabase("authdb"));
-            services.AddDbContext<AuthContext>(options => options.UseSqlServer(this.appConfiguration.SqlServer.ConnectionString), ServiceLifetime.Singleton);
+            services.AddDbContext<AuthContext>(options => options.UseSqlServer(
+                connectionString: this.identityConfiguration.SqlServer.ConnectionString,
+                sqlServerOptionsAction: sqlOptions => sqlOptions.CommandTimeout(this.identityConfiguration.SqlServer.Timeout)), ServiceLifetime.Singleton);
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserRepository, UserRepository>();
