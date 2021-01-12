@@ -19,37 +19,64 @@
 
         public async Task CreateAsync(Product product)
         {
-            throw new NotImplementedException();
+            await this.catalogContext.Products.InsertOneAsync(product);
         }
 
-        public async Task<bool> DeleteAsync(Product product)
+        public async Task<bool> DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Product>.Filter.Eq(_ => _.Id, id);
+
+            var deleteResult = await this.catalogContext
+                .Products
+                .DeleteOneAsync(filter);
+
+            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await this.catalogContext.Products.Find(_ => true).ToListAsync();
+            return await this.catalogContext
+                .Products
+                .Find(_ => true).ToListAsync();
         }
 
-        public async Task<Product> GetAsync(string id)
+        public async Task<Product> GetByIdAsync(string id)
         {
-            return await this.catalogContext.Products.Find(_ => _.Id == id).FirstOrDefaultAsync();
+            var filter = Builders<Product>.Filter.Eq(_ => _.Id, id);
+
+            return await this.catalogContext
+                .Products
+                .Find(filter)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<Product> GetByCategoryAsync(string category)
+        public async Task<IEnumerable<Product>> GetAllByCategoryAsync(string category)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Product>.Filter.Eq(_ => _.Category, category);
+
+            return await this.catalogContext
+                .Products
+                .Find(filter)
+                .ToListAsync();
         }
 
-        public async Task<Product> GetByNameAsync(string name)
+        public async Task<IEnumerable<Product>> GetAllByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Product>.Filter.ElemMatch(_ => _.Name, name);
+
+            return await this.catalogContext
+                .Products
+                .Find(filter)
+                .ToListAsync();
         }
 
         public async Task<bool> UpdateAsync(Product product)
         {
-            throw new NotImplementedException();
+            var updateResult = await this.catalogContext
+                .Products
+                .ReplaceOneAsync(filter: _ => _.Id == product.Id, replacement: product);
+
+            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
     }
 }

@@ -7,11 +7,17 @@
     public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetAllAsync();
-        Task<Product> GetAsync(string id);
-        Task<Product> GetByNameAsync(string name);
-        Task<Product> GetByCategoryAsync(string category);
+        
+        Task<IEnumerable<Product>> GetAllByNameAsync(string name);
+        
+        Task<IEnumerable<Product>> GetAllByCategoryAsync(string category);
+        
+        Task<Product> GetByIdAsync(string id);
+        
         Task CreateAsync(Product product);
+        
         Task<bool> UpdateAsync(Product product);
-        Task<bool> DeleteAsync(Product product);
+        
+        Task<bool> DeleteAsync(string id);
     }
 }
