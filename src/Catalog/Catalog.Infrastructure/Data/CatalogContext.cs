@@ -12,6 +12,7 @@
             var database = client.GetDatabase(mongoDbConfiguration.DatabaseName);
 
             this.Products = database.GetCollection<Product>(mongoDbConfiguration.CollectionName);
+            CatalogContextSeed.SeedData(this.Products);
         }
 
         public IMongoCollection<Product> Products { get; }

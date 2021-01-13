@@ -4,10 +4,17 @@ services:
     authdb:
         image: mcr.microsoft.com/mssql/server
 
+    catalogdb:
+        image: mongo
+
     identity.api:
         image: ${DOCKER_REGISTRY-}identityapi
         build:
             context: .
             dockerfile: src/Identity/Identity.API/Dockerfile
-        depends_on:
-            - authdb
+
+    catalog.api:
+        image: ${DOCKER_REGISTRY-}catalogapi
+        build:
+            context: .
+            dockerfile: src/Catalog/Catalog.API/Dockerfile

@@ -62,7 +62,7 @@
 
         public async Task<IEnumerable<Product>> GetAllByNameAsync(string name)
         {
-            var filter = Builders<Product>.Filter.ElemMatch(_ => _.Name, name);
+            var filter = Builders<Product>.Filter.Eq(_ => _.Name, name);
 
             return await this.catalogContext
                 .Products
