@@ -9,7 +9,7 @@ localhost:8000/swagger
 ### Catalog Service
 localhost:8001/swagger
 
--MongoDB
+- MongoDB
 
 ### Basket Service
 localhost:8002/swagger
