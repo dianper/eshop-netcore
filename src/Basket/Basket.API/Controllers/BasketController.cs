@@ -39,14 +39,7 @@
         public async Task<ActionResult<Cart>> GetAsync(string username)
         {
             var basket = await this.basketRepository.GetAsync(username);
-            if (basket == null)
-            {
-                this.logger.LogWarning("Basket not found");
-
-                return NotFound();
-            }
-
-            return Ok(basket);
+            return Ok(basket ?? new Cart(username));
         }
 
         [HttpPost]
@@ -81,7 +74,7 @@
                 return BadRequest();
             }
 
-            var eventMessage = this.mapper.Map<BasketCheckoutEvent>(basket);
+            var eventMessage = this.mapper.Map<BasketCheckoutEvent>(checkout);
             eventMessage.RequestId = Guid.NewGuid();
             eventMessage.TotalPrice = basket.TotalPrice;
 
@@ -89,8 +82,16 @@
             {
                 this.eventBus.PublishBasketCheckout(RabbitMQConstants.BasketCheckoutQueue, eventMessage);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this.logger.LogError("Error publishing integration event.", new
+                {
+                    Class = nameof(BasketController),
+                    Method = nameof(CheckoutAsync),
+                    RequestId = eventMessage.RequestId,
+                    Ex = ex
+                });
+
                 throw;
             }
 

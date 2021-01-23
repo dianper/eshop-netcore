@@ -10,6 +10,9 @@ services:
     basketdb:
         image: redis
 
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+
     identity.api:
         image: ${DOCKER_REGISTRY-}identityapi
         build:

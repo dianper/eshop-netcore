@@ -5,6 +5,7 @@ namespace Basket.API
     using Basket.Infrastructure.Data;
     using Basket.Infrastructure.Repository;
     using EventBusRabbitMQ;
+    using EventBusRabbitMQ.Producer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -62,6 +63,8 @@ namespace Basket.API
 
                 return new RabbitMQConnection(connectionFactory);
             });
+
+            services.AddSingleton<RabbitMQProducer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
