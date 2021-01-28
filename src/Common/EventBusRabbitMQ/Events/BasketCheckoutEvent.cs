@@ -6,7 +6,7 @@
     {
         public Guid RequestId { get; set; }
 
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         public decimal TotalPrice { get; set; }
 
