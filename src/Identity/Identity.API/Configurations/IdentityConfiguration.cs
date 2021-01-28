@@ -5,6 +5,5 @@
     public class IdentityConfiguration
     {
         public AuthConfiguration Authentication { get; set; }
-        public SqlServerConfiguration SqlServer { get; set; }
     }
 }

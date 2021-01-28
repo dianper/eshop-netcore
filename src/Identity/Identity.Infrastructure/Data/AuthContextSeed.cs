@@ -27,10 +27,10 @@
             }
             catch (Exception ex)
             {
-                if(retryForAvailability < 3)
+                if (retryForAvailability < 3)
                 {
                     retryForAvailability++;
-                    
+
                     var log = loggerFactory.CreateLogger<AuthContextSeed>();
                     log.LogError(ex.Message);
 

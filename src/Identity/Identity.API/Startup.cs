@@ -21,18 +21,18 @@ namespace Identity.API
 
         public Startup(IConfiguration configuration)
         {
+            this.Configuration = configuration;
             this.identityConfiguration = configuration.Get<IdentityConfiguration>();
         }
+
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(this.identityConfiguration.Authentication);
 
-            services.AddDbContext<AuthContext>(options => options.UseSqlServer(
-                connectionString: this.identityConfiguration.SqlServer.ConnectionString,
-                sqlServerOptionsAction: sqlOptions => sqlOptions.CommandTimeout(this.identityConfiguration.SqlServer.Timeout)), ServiceLifetime.Singleton);
-
+            services.AddDbContext<AuthContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("Identity")), ServiceLifetime.Singleton);
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthService, AuthService>();
