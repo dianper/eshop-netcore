@@ -1,8 +1,12 @@
-﻿namespace Checkout.Core.Entities
+﻿namespace Checkout.Application.Responses
 {
-    public class Order : Entity
+    using System;
+
+    public class OrderResponse
     {
-        public string UserName { get; set; }
+        public Guid Id { get; set; }
+
+        public string Username { get; set; }
 
         public decimal TotalPrice { get; set; }
 

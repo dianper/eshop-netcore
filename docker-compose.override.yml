@@ -1,13 +1,13 @@
 version: '3.4'
 
 services:
-    authdb:
-        container_name: authdb
-        ports:
-            - "1433:1433"
+    sqldb:
+        container_name: sqldb
         environment:
             SA_PASSWORD: "yourStrong(!)Password"
             ACCEPT_EULA: "Y"
+        ports:
+            - "1433:1433"
 
     catalogdb:
         container_name: catalogdb
@@ -32,12 +32,12 @@ services:
 
     identity.api:
         container_name: identityapi
-        restart: on-failure
+        restart: "no"
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - "SqlServer:ConnectionString=Server=authdb;Database=AuthDb;User Id=sa;Password=yourStrong(!)Password"
+            - "ConnectionStrings:Identity=Server=sqldb;Database=AuthDb;User Id=sa;Password=yourStrong(!)Password"
         depends_on:
-            - authdb
+            - sqldb
         volumes:
             - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
@@ -58,6 +58,7 @@ services:
             - "8001:80"
 
     basket.api:
+        container_name: basketapi
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "ConnectionStrings:Redis=basketdb:6379"
@@ -70,3 +71,19 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "8002:80"
+
+    checkout.api:
+        container_name: checkoutapi
+        restart: "no"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "ConnectionStrings:Order=Server=sqldb;Database=OrderDb;User Id=sa;Password=yourStrong(!)Password"
+            - "EventBus:HostName=rabbitmq"
+        depends_on:
+            - sqldb
+            - rabbitmq
+        volumes:
+            - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+            - ${HOME}/.aspnet/https:/root/.aspnet/https/
+        ports:
+            - "8003:80"

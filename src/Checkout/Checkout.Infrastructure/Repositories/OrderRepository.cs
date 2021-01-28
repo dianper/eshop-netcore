@@ -14,9 +14,9 @@
         {
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersByUsername(string username)
+        public async Task<IEnumerable<Order>> GetOrdersByUserName(string userName)
         {
-            return await this.orderContext.Orders.Where(_ => _.Username.Equals(username)).ToListAsync();
+            return await this.orderContext.Orders.Where(_ => _.UserName.Equals(userName)).ToListAsync();
         }
     }
 }

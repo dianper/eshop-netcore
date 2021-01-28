@@ -1,24 +1,42 @@
 ﻿namespace Checkout.API.Controllers
 {
+    using System;
     using System.Collections.Generic;
+    using System.Net;
+    using System.Threading.Tasks;
+    using Checkout.Application.Commands;
+    using Checkout.Application.Queries;
+    using Checkout.Application.Responses;
+    using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
 
     [ApiController]
     [Route("api/v1/[controller]")]
     public class CheckoutController : ControllerBase
     {
-        private readonly ILogger<CheckoutController> _logger;
+        private readonly IMediator mediator;
 
-        public CheckoutController(ILogger<CheckoutController> logger)
+        public CheckoutController(IMediator mediator)
         {
-            _logger = logger;
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        [ProducesResponseType(typeof(IEnumerable<OrderResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<OrderResponse>>> GetOrdersByUserNameAsync(string userName)
         {
-            return new string[] { };
+            var query = new GetOrderByUserNameQuery(userName);
+
+            return Ok(await this.mediator.Send(query));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(OrderResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<OrderResponse>> CheckoutOrderAsync([FromBody] CheckoutOrderCommand command)
+        {
+            var result = await this.mediator.Send(command);
+
+            return Ok(result);
         }
     }
 }

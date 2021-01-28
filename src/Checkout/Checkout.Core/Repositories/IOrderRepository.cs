@@ -6,6 +6,6 @@
 
     public interface IOrderRepository : IRepository<Order>
     {
-        Task<IEnumerable<Order>> GetOrdersByUsername(string username);
+        Task<IEnumerable<Order>> GetOrdersByUserName(string userName);
     }
 }

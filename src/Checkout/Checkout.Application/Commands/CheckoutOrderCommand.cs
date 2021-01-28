@@ -1,8 +1,11 @@
-﻿namespace Checkout.Core.Entities
+﻿namespace Checkout.Application.Commands
 {
-    public class Order : Entity
+    using Checkout.Application.Responses;
+    using MediatR;
+
+    public class CheckoutOrderCommand : IRequest<OrderResponse>
     {
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         public decimal TotalPrice { get; set; }
 

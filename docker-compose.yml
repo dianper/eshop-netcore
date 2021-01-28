@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-    authdb:
+    sqldb:
         image: mcr.microsoft.com/mssql/server
 
     catalogdb:
@@ -30,3 +30,9 @@ services:
         build:
             context: .
             dockerfile: src/Basket/Basket.API/Dockerfile
+
+    checkout.api:
+        image: ${DOCKER_REGISTRY-}checkoutapi
+        build:
+            context: .
+            dockerfile: src/Checkout/Checkout.API/Dockerfile
