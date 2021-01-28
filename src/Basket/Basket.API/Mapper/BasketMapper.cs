@@ -1,12 +1,12 @@
-﻿namespace Basket.API.Mapping
+﻿namespace Basket.API.Mapper
 {
     using AutoMapper;
     using Basket.Core.Entities;
     using EventBusRabbitMQ.Events;
 
-    public class BasketMapping : Profile
+    public class BasketMapper : Profile
     {
-        public BasketMapping()
+        public BasketMapper()
         {
             CreateMap<Checkout, BasketCheckoutEvent>().ReverseMap();
         }

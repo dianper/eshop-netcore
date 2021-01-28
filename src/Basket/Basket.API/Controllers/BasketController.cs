@@ -36,10 +36,10 @@
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Cart), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Cart>> GetAsync(string username)
+        public async Task<ActionResult<Cart>> GetAsync(string userName)
         {
-            var basket = await this.basketRepository.GetAsync(username);
-            return Ok(basket ?? new Cart(username));
+            var basket = await this.basketRepository.GetAsync(userName);
+            return Ok(basket ?? new Cart(userName));
         }
 
         [HttpPost]
@@ -49,11 +49,11 @@
             return Ok(await this.basketRepository.UpdateAsync(basket));
         }
 
-        [HttpDelete("{username}")]
+        [HttpDelete("{userName}")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateAsync(string username)
+        public async Task<IActionResult> UpdateAsync(string userName)
         {
-            return Ok(await this.basketRepository.DeleteAsync(username));
+            return Ok(await this.basketRepository.DeleteAsync(userName));
         }
 
         [Route("[action]")]
@@ -62,13 +62,13 @@
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CheckoutAsync([FromBody] Checkout checkout)
         {
-            var basket = await this.basketRepository.GetAsync(checkout.Username);
+            var basket = await this.basketRepository.GetAsync(checkout.UserName);
             if (basket == null)
             {
                 return BadRequest();
             }
 
-            var basketRemoved = await this.basketRepository.DeleteAsync(basket.Username);
+            var basketRemoved = await this.basketRepository.DeleteAsync(basket.UserName);
             if (!basketRemoved)
             {
                 return BadRequest();

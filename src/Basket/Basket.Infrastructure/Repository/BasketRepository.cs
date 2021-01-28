@@ -16,14 +16,14 @@
             this.basketContext = basketContext ?? throw new ArgumentNullException(nameof(basketContext));
         }
 
-        public async Task<bool> DeleteAsync(string username)
+        public async Task<bool> DeleteAsync(string userName)
         {
-            return await this.basketContext.Redis.KeyDeleteAsync(username);
+            return await this.basketContext.Redis.KeyDeleteAsync(userName);
         }
 
-        public async Task<Cart> GetAsync(string username)
+        public async Task<Cart> GetAsync(string userName)
         {
-            var basket = await this.basketContext.Redis.StringGetAsync(username);
+            var basket = await this.basketContext.Redis.StringGetAsync(userName);
             if (basket.IsNullOrEmpty)
             {
                 return null;
@@ -34,13 +34,13 @@
 
         public async Task<Cart> UpdateAsync(Cart basket)
         {
-            var updated = await this.basketContext.Redis.StringSetAsync(basket.Username, JsonConvert.SerializeObject(basket));
+            var updated = await this.basketContext.Redis.StringSetAsync(basket.UserName, JsonConvert.SerializeObject(basket));
             if (!updated)
             {
                 return null;
             }
 
-            return await GetAsync(basket.Username);
+            return await GetAsync(basket.UserName);
         }
     }
 }

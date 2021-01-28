@@ -8,10 +8,10 @@
 
         public Cart(string username)
         {
-            this.Username = username;
+            this.UserName = username;
         }
 
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         public IEnumerable<CartItems> Items { get; set; } = new List<CartItems>();
 
