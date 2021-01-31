@@ -4,7 +4,6 @@
     using System.Text;
     using AutoMapper;
     using Checkout.Application.Commands;
-    using Checkout.Core.Repositories;
     using EventBusRabbitMQ;
     using EventBusRabbitMQ.Constants;
     using EventBusRabbitMQ.Events;
@@ -18,14 +17,15 @@
         private readonly IRabbitMQConnection connection;
         private readonly IMediator mediator;
         private readonly IMapper mapper;
-        private readonly IOrderRepository orderRepository;
 
-        public RabbitMQConsumer(IRabbitMQConnection connection, IMediator mediator, IMapper mapper, IOrderRepository orderRepository)
+        public RabbitMQConsumer(
+            IRabbitMQConnection connection,
+            IMediator mediator,
+            IMapper mapper)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this.orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         }
 
         public void Consume()
@@ -59,14 +59,14 @@
             if (e.RoutingKey == RabbitMQConstants.BasketCheckoutQueue)
             {
                 var message = Encoding.UTF8.GetString(e.Body.Span);
-                
-                var basketCheckoutEvent = JsonConvert.DeserializeObject<BasketCheckoutEvent>(message);
-                
-                var command = this.mapper.Map<CheckoutOrderCommand>(basketCheckoutEvent);
-                
-                var result = await this.mediator.Send(command);
 
-                // this.orderRepository.AddAsync()
+                var basketCheckoutEvent = JsonConvert.DeserializeObject<BasketCheckoutEvent>(message);
+
+                var command = this.mapper.Map<CheckoutOrderCommand>(basketCheckoutEvent);
+
+                var orderResponse = await this.mediator.Send(command);
+
+                /* Use orderResponse for anything */
             }
         }
     }

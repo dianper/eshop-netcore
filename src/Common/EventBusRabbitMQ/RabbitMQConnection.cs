@@ -25,7 +25,7 @@
         {
             get
             {
-                return this.connection != null && this.connection.IsOpen && !disposed;
+                return this.connection != null && this.connection.IsOpen && !this.disposed;
             }
         }
 

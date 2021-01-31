@@ -34,7 +34,6 @@
         }
 
         [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Cart), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Cart>> GetAsync(string userName)
         {

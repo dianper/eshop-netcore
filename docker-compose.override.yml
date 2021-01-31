@@ -32,7 +32,7 @@ services:
 
     identity.api:
         container_name: identityapi
-        restart: "no"
+        restart: on-failure
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "ConnectionStrings:Identity=Server=sqldb;Database=AuthDb;User Id=sa;Password=yourStrong(!)Password"
@@ -74,7 +74,7 @@ services:
 
     checkout.api:
         container_name: checkoutapi
-        restart: "no"
+        restart: on-failure
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - "ConnectionStrings:Order=Server=sqldb;Database=OrderDb;User Id=sa;Password=yourStrong(!)Password"
@@ -87,3 +87,18 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "8003:80"
+
+    apigw:
+        container_name: ocelotapigateway
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        depends_on:
+            - identity.api
+            - catalog.api
+            - basket.api
+            - checkout.api
+        volumes:
+            - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+            - ${HOME}/.aspnet/https:/root/.aspnet/https/
+        ports:
+            - "8004:80"

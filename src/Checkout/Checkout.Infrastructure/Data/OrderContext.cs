@@ -3,7 +3,7 @@
     using Checkout.Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public class OrderContext : DbContext
+    public class OrderContext : DbContext, IOrderContext
     {
         public OrderContext(DbContextOptions<OrderContext> options) : base(options)
         {
