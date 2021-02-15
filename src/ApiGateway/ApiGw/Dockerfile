@@ -6,10 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["ApiGateway/ApiGw/ApiGw.csproj", "ApiGateway/ApiGw/"]
-RUN dotnet restore "ApiGateway/ApiGw/ApiGw.csproj"
+COPY ["src/ApiGateway/ApiGw/ApiGw.csproj", "src/ApiGateway/ApiGw/"]
+RUN dotnet restore "src/ApiGateway/ApiGw/ApiGw.csproj"
 COPY . .
-WORKDIR "/src/ApiGateway/ApiGw"
+WORKDIR "/src/src/ApiGateway/ApiGw"
 RUN dotnet build "ApiGw.csproj" -c Release -o /app/build
 
 FROM build AS publish

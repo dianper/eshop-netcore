@@ -41,4 +41,4 @@ services:
         image: ${DOCKER_REGISTRY-}apigw
         build:
             context: .
-            dockerfile: ApiGateway/ApiGw/Dockerfile
+            dockerfile: src/ApiGateway/ApiGw/Dockerfile
