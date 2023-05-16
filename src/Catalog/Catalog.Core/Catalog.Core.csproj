@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="MongoDB.Bson" Version="2.11.5" />
-    <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
   </ItemGroup>
 
 </Project>
